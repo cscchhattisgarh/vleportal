@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="hi" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSC Chhattisgarh - VLE Portal</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Google Fonts: Inter, Poppins & Noto Sans Devanagari -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans Devanagari', 'sans-serif'],
+            display: ['Poppins', 'Noto Sans Devanagari', 'sans-serif'],
+          },
+          colors: {
+            csc: {
+              navy: '#0a2351',
+              dark: '#061533',
+              blue: '#1e3a8a',
+              teal: '#0d9488',
+              cyan: '#06b6d4',
+              accent: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen font-sans text-slate-800 bg-slate-50 antialiased selection:bg-teal-600 selection:text-white">
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 bg-slate-900 text-white px-5 py-3.5 rounded-xl shadow-2xl border border-slate-700 text-sm font-medium">
+    <i class="fa-solid fa-circle-check text-cyan-400 text-base"></i>
+    <span id="toast-msg">Link copied to clipboard!</span>
+  </div>
+
+  <!-- Header Section -->
+  <header class="bg-csc-dark text-white border-b-4 border-cyan-500 shadow-lg sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 flex items-center justify-center text-csc-dark font-extrabold text-2xl shadow-inner border border-cyan-200">
+          <i class="fa-solid fa-landmark-dome text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] uppercase tracking-wider font-bold bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-400/30">Official VLE Gateway</span>
+            <span class="hidden sm:inline-block text-xs text-slate-400">| डिजिटल सेवा केंद्र छत्तीसगढ़</span>
+          </div>
+          <h1 class="font-display text-lg sm:text-xl font-bold tracking-tight text-white">CSC Chhattisgarh - VLE Portal</h1>
+        </div>
+      </div>
+
+      <!-- Quick Action / Date Badge -->
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex flex-col text-right">
+          <span class="text-xs text-slate-400 font-medium" id="current-date">Today</span>
+          <span class="text-xs font-semibold text-cyan-400 flex items-center gap-1.5 justify-end">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+            </span>
+            VLE Services Active
+          </span>
+        </div>
+        <button onclick="shareMasterPortal()" class="px-3.5 py-2 bg-csc-blue hover:bg-blue-800 border border-blue-700 rounded-xl text-xs font-semibold text-white transition flex items-center gap-2 shadow-sm">
+          <i class="fa-solid fa-share-nodes text-cyan-300"></i>
+          <span>Share Portal Link</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero & Search Section -->
+  <section class="bg-gradient-to-br from-csc-navy via-csc-blue to-teal-900 text-white pt-10 pb-16 px-4 sm:px-6 lg:px-8 shadow-inner">
+    <div class="max-w-4xl mx-auto text-center space-y-4">
+      <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs text-cyan-200 font-medium">
+        <i class="fa-solid fa-sparkles"></i>
+        <span>Dedicated Single-Window Portal for Village Level Entrepreneurs (VLEs)</span>
+      </div>
+      <h2 class="font-display text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+        CSC Chhattisgarh - VLE Services Portal
+      </h2>
+      <p class="text-sm sm:text-base text-slate-200 max-w-2xl mx-auto font-normal leading-relaxed">
+        सभी VLE सेवाओं, सर्वेक्षण एवं प्रशिक्षण पोर्टल के लिए एकल मंच <br class="hidden sm:inline">
+        <span class="text-cyan-300 text-xs sm:text-sm font-medium">(Single Window Portal for Chhattisgarh VLEs)</span>
+      </p>
+
+      <!-- Quick Search Input -->
+      <div class="pt-4 max-w-xl mx-auto relative">
+        <div class="relative flex items-center">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400 text-base"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            oninput="handleSearch()" 
+            placeholder="पोर्टल खोजें (उदा: Branding, BharatNet, Training, MVY Payment...)" 
+            class="w-full pl-11 pr-10 py-3.5 bg-white text-slate-900 placeholder-slate-400 rounded-2xl text-sm font-medium shadow-2xl focus:outline-none focus:ring-4 focus:ring-cyan-400/50 border-0 transition"
+          >
+          <button id="clearSearch" onclick="clearSearchInput()" class="hidden absolute right-3.5 text-slate-400 hover:text-slate-600 text-sm p-1">
+            <i class="fa-solid fa-circle-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Body Content -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 flex-1 pb-16 w-full">
+    
+    <!-- Status Bar -->
+    <div class="bg-white px-5 py-3.5 rounded-2xl shadow-md border border-slate-200/80 mb-8 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+        <span class="text-xs sm:text-sm font-bold text-slate-700">उपलब्ध VLE सेवाएं एवं पोर्टल:</span>
+        <span id="portalCount" class="text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200 px-2.5 py-0.5 rounded-full">4 पोर्टल्स</span>
+      </div>
+      <div class="text-xs text-slate-500 font-medium">
+        एक क्लिक में पोर्टल खोलें या लिंक कॉपी करके साझा करें
+      </div>
+    </div>
+
+    <!-- Main Portal Grid (4 Cards) -->
+    <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- CARD 1: Branding Photo Upload & Status Check -->
+      <div class="portal-card bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1" data-title="branding photo upload status check centre brandingstatus banner audit">
+        <div class="p-6 sm:p-7">
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <div class="w-13 h-13 p-3.5 rounded-2xl bg-blue-50 text-csc-blue border border-blue-100 flex items-center justify-center text-2xl group-hover:scale-105 group-hover:bg-csc-blue group-hover:text-white transition-all duration-300">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
+              Centre Branding
+            </span>
+          </div>
+          <h3 class="font-display text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-csc-blue transition-colors">
+            Branding Photo Upload & Status Check
+          </h3>
+          <p class="text-sm leading-relaxed text-slate-600">
+            CSC सेंटर ब्रांडिंग फोटो अपलोड करें और अप्रूवल स्टेटस चेक करें।
+          </p>
+        </div>
+
+        <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+          <a href="https://cscchhattisgarh.github.io/brandingstatus/" target="_blank" rel="noopener noreferrer" class="flex-1 text-center py-2.5 px-4 bg-gradient-to-r from-csc-navy to-csc-blue hover:from-csc-blue hover:to-blue-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:shadow-md transition flex items-center justify-center gap-2">
+            <span>Open Portal</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+          <button onclick="copyLink('https://cscchhattisgarh.github.io/brandingstatus/')" title="Copy Link" class="py-2.5 px-3.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-700 hover:text-csc-navy text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy Link</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 2: BharatNet Pre-Survey -->
+      <div class="portal-card bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1" data-title="bharatnet pre-survey field survey bharatnet_pre-survey gram panchayat wifi network location verification">
+        <div class="p-6 sm:p-7">
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <div class="w-13 h-13 p-3.5 rounded-2xl bg-cyan-50 text-cyan-700 border border-cyan-100 flex items-center justify-center text-2xl group-hover:scale-105 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300">
+              <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200">
+              Field Survey
+            </span>
+          </div>
+          <h3 class="font-display text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-cyan-700 transition-colors">
+            BharatNet Pre-Survey
+          </h3>
+          <p class="text-sm leading-relaxed text-slate-600">
+            ग्राम पंचायत भारतनेट प्री-सर्वे डेटा एवं लोकेशन वेरिफिकेशन फॉर्म।
+          </p>
+        </div>
+
+        <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+          <a href="https://cscchhattisgarh.github.io/bharatnet_pre-survey/" target="_blank" rel="noopener noreferrer" class="flex-1 text-center py-2.5 px-4 bg-gradient-to-r from-csc-navy to-csc-blue hover:from-csc-blue hover:to-blue-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:shadow-md transition flex items-center justify-center gap-2">
+            <span>Open Portal</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+          <button onclick="copyLink('https://cscchhattisgarh.github.io/bharatnet_pre-survey/')" title="Copy Link" class="py-2.5 px-3.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-700 hover:text-csc-navy text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy Link</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 3: Training Attendance -->
+      <div class="portal-card bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1" data-title="training attendance workshop training-attendance module email confirmation vle">
+        <div class="p-6 sm:p-7">
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <div class="w-13 h-13 p-3.5 rounded-2xl bg-teal-50 text-teal-700 border border-teal-100 flex items-center justify-center text-2xl group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+              Training & Workshop
+            </span>
+          </div>
+          <h3 class="font-display text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-teal-700 transition-colors">
+            Training Attendance
+          </h3>
+          <p class="text-sm leading-relaxed text-slate-600">
+            VLE प्रशिक्षण मॉड्यूल उपस्थिति दर्ज करें और ईमेल कन्फर्मेशन प्राप्त करें।
+          </p>
+        </div>
+
+        <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+          <a href="https://cscchhattisgarh.github.io/training-attendance/" target="_blank" rel="noopener noreferrer" class="flex-1 text-center py-2.5 px-4 bg-gradient-to-r from-csc-navy to-csc-blue hover:from-csc-blue hover:to-blue-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:shadow-md transition flex items-center justify-center gap-2">
+            <span>Open Portal</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+          <button onclick="copyLink('https://cscchhattisgarh.github.io/training-attendance/')" title="Copy Link" class="py-2.5 px-3.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-700 hover:text-csc-navy text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy Link</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 4: MVY eKYC Payment Status Portal -->
+      <div class="portal-card bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1" data-title="mvy ekyc payment status portal mvyekyc mahtari vandan yojana labour payout">
+        <div class="p-6 sm:p-7">
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <div class="w-13 h-13 p-3.5 rounded-2xl bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center justify-center text-2xl group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200">
+              Payment & eKYC
+            </span>
+          </div>
+          <h3 class="font-display text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-700 transition-colors">
+            MVY eKYC Payment Status Portal
+          </h3>
+          <p class="text-sm leading-relaxed text-slate-600">
+            महतारी वंदन योजना (MVY) / लेबर eKYC भुगतान स्थिति की जांच करें।
+          </p>
+        </div>
+
+        <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+          <a href="https://cscchhattisgarh.github.io/mvyekyc/" target="_blank" rel="noopener noreferrer" class="flex-1 text-center py-2.5 px-4 bg-gradient-to-r from-csc-navy to-csc-blue hover:from-csc-blue hover:to-blue-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:shadow-md transition flex items-center justify-center gap-2">
+            <span>Open Portal</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+          <button onclick="copyLink('https://cscchhattisgarh.github.io/mvyekyc/')" title="Copy Link" class="py-2.5 px-3.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-700 hover:text-csc-navy text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy Link</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State for Search -->
+    <div id="noResults" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 mt-6">
+      <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <h4 class="text-base font-bold text-slate-800">कोई संबंधित पोर्टल नहीं मिला</h4>
+      <p class="text-xs text-slate-500 mt-1">कृपया सर्च शब्द बदलकर पुनः प्रयास करें।</p>
+      <button onclick="clearSearchInput()" class="mt-4 px-4 py-2 bg-csc-navy hover:bg-csc-blue text-white text-xs font-semibold rounded-xl transition">
+        सभी पोर्टल दिखाएं
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Help & Support Strip -->
+  <section class="bg-slate-100 border-t border-slate-200 py-5 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+      <div class="flex items-center gap-2 text-center sm:text-left">
+        <i class="fa-solid fa-circle-info text-csc-blue text-base"></i>
+        <span>किसी भी तकनीकी सहायता अथवा अप्रूवल संबंधित जानकारी के लिए अपने जिला प्रबंधक (District Manager) से संपर्क करें।</span>
+      </div>
+      <button onclick="shareMasterPortal()" class="text-csc-blue hover:text-csc-navy font-bold flex items-center gap-1.5 shrink-0">
+        <i class="fa-solid fa-copy"></i>
+        <span>Copy VLE Portal URL</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-csc-dark text-slate-300 py-6 px-4 text-center text-xs border-t border-slate-800">
+    <p class="font-semibold text-white">CSC e-Governance Services India Limited - Chhattisgarh State Team</p>
+    <p class="text-slate-400 text-[11px] mt-1">Official VLE Operations & Reporting Gateway • State Office, Raipur (C.G.)</p>
+  </footer>
+
+  <!-- JavaScript Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      const today = new Date().toLocaleDateString('hi-IN', options);
+      const el = document.getElementById("current-date");
+      if (el) el.innerText = today;
+    });
+
+    function handleSearch() {
+      const val = document.getElementById('searchInput').value.trim();
+      const clearBtn = document.getElementById('clearSearch');
+      if (val.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      applyFilters();
+    }
+
+    function clearSearchInput() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      document.getElementById('clearSearch').classList.add('hidden');
+      applyFilters();
+      input.focus();
+    }
+
+    function applyFilters() {
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.portal-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardKeywords = card.getAttribute('data-title').toLowerCase();
+        const searchMatch = !searchQuery || cardKeywords.includes(searchQuery);
+
+        if (searchMatch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('portalCount').innerText = `${visibleCount} पोर्टल्स`;
+      const noResults = document.getElementById('noResults');
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+    }
+
+    function copyLink(url) {
+      fallbackCopyText(url);
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('Link copied to clipboard!');
+      } catch (err) {
+        showToast('Unable to copy link automatically.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function shareMasterPortal() {
+      const fullUrl = window.location.href;
+      fallbackCopyText(fullUrl);
+      showToast('VLE Portal link copied to clipboard!');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.innerText = message;
+      
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
